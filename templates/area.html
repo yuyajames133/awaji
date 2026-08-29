@@ -37,6 +37,15 @@
     } | tojson }}</script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='37') }}">
 </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GH8ZNT4GCQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GH8ZNT4GCQ');
+</script>
 <body>
 
 {% include '_header.html' %}

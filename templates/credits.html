@@ -1,7 +1,20 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>写真クレジット | TabiRoute</title>
+<!DOCTYPE html><html lang="ja"
+><head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>写真クレジット | TabiRoute</title>
     <meta name="description" content="TabiRouteで使用している写真のクレジットとライセンス情報です。">
     <meta name="robots" content="noindex,follow">
-    <link rel="canonical" href="{{ absolute_url('credits') if false else url_for('credits', _external=True) }}"><link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='37') }}"></head><body>
+    <link rel="canonical" href="{{ absolute_url('credits') if false else url_for('credits', _external=True) }}"><link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='37') }}">
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GH8ZNT4GCQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GH8ZNT4GCQ');
+</script>
+<body>
 {% include '_header.html' %}
 <main class="credits-page">
 <div class="site-affiliate-notice">
