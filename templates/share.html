@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <!-- =====================================================
+    【目次】
+    1. 基本設定
+    2. ヘッダー
+    3. 共有プラン確認
+    4. 取り込み操作
+    5. JavaScript
+    ====================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="robots"
+        content="noindex,nofollow"
+    >
+
+    <title>共有プラン | TabiRoute</title>
+    <meta name="description" content="TabiRouteで共有された旅行プランを表示します。">
+    <meta name="robots" content="noindex,follow">
+    <link rel="canonical" href="{{ absolute_url('share_plan') if false else url_for('share_plan', _external=True) }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css', v='37') }}"
+    >
+
+</head>
+
+<body>
+
+{% include '_header.html' %}
+
+
+<main class="share-page">
+
+    <section class="share-card">
+
+        <p class="section-label">
+            SHARED PLAN
+        </p>
+
+        <h1>
+            共有された旅行プラン
+        </h1>
+
+        <p class="share-description">
+            このリンクに含まれている旅行プランを、
+            今使っているスマホ・パソコンへ取り込めます。
+        </p>
+
+        <div
+            id="share-preview"
+            class="share-preview"
+        >
+            読み込み中...
+        </div>
+
+        <div class="share-warning">
+
+            <strong>
+                この端末に取り込むと
+            </strong>
+
+            <p>
+                現在このブラウザに保存されている旅行プランは、
+                共有されたプランに置き換わります。
+                お気に入りが共有されている場合は、お気に入りも一緒に取り込みます。
+            </p>
+
+        </div>
+
+        <button
+            id="import-shared-plan-button"
+            type="button"
+            class="primary-button share-import-button"
+            disabled
+        >
+            この端末に取り込む
+        </button>
+
+        <a
+            href="{{ url_for('plan') }}"
+            class="share-cancel-link"
+        >
+            取り込まず旅行プランへ戻る
+        </a>
+
+    </section>
+
+</main>
+
+
+<script
+    src="{{ url_for('static', filename='app.js', v='37') }}"
+></script>
+
+{% include '_footer.html' %}
+
+</body>
+</html>

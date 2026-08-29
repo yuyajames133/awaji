@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ seo_title }}</title>
+    <meta name="description" content="{{ seo_description }}">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TabiRoute">
+    <meta property="og:title" content="{{ seo_title }}">
+    <meta property="og:description" content="{{ seo_description }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    {% if guide_cards and guide_cards[0].hero_image %}
+    <meta property="og:image" content="{{ guide_cards[0].hero_image }}">
+    {% endif %}
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='37') }}">
+</head>
+
+<body class="guide-v36">
+
+{% include '_header.html' %}
+
+
+<!-- =========================================================
+ガイドページ ヒーロー
+========================================================= -->
+
+<section
+    class="guide36-hero"
+    {% if guide_cards and guide_cards[0].hero_image %}
+    style="
+        background-image:
+            linear-gradient(
+                90deg,
+                rgba(244,249,251,.96) 0%,
+                rgba(244,249,251,.86) 34%,
+                rgba(244,249,251,.18) 64%,
+                rgba(244,249,251,.02) 100%
+            ),
+            url('{{ guide_cards[0].hero_image }}');
+    "
+    {% endif %}
+>
+    <div class="guide36-hero-inner">
+
+        <div class="guide36-hero-copy">
+
+            <p class="v34-eyebrow">
+                TRAVEL GUIDE
+            </p>
+
+            <h1>
+                目的から、<br>
+                淡路島旅行を探す。
+            </h1>
+
+            <p>
+                1泊2日、車なし、雨の日、カップル、子連れ、西海岸。<br>
+                旅の条件から候補を選んで、そのまま旅行プランへ。
+            </p>
+
+            <div class="guide36-hero-actions">
+                <a href="#guide-list" class="v34-button-primary">
+                    モデルコースを見る
+                </a>
+
+                <a href="{{ url_for('ai_plan') }}" class="v34-button-secondary">
+                    AIで作る
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<main class="guide36-main">
+
+    <!-- =====================================================
+    目的別モデルコース一覧
+    ====================================================== -->
+
+    <section class="guide36-section" id="guide-list">
+
+        <div class="guide36-section-heading">
+
+            <div>
+                <p class="v34-eyebrow">
+                    MODEL COURSE
+                </p>
+
+                <h2>
+                    目的別モデルコース
+                </h2>
+
+                <p>
+                    気になるテーマを選ぶと、おすすめ候補スポットをまとめて見られます。
+                </p>
+            </div>
+
+            <a href="{{ url_for('plan') }}" class="guide36-heading-link">
+                旅行プランを見る →
+            </a>
+
+        </div>
+
+
+        <div class="guide36-grid">
+
+            {% for card in guide_cards %}
+
+            <a
+                href="{{ url_for('guide_detail', slug=card.slug) }}"
+                class="guide36-card"
+            >
+
+                <div class="guide36-card-image">
+
+                    {% if card.hero_image %}
+                    <img
+                        src="{{ card.hero_image }}"
+                        alt="{{ card.guide.short_title }}"
+                        loading="lazy"
+                    >
+                    {% endif %}
+
+                    <span class="guide36-card-badge">
+                        {{ card.guide.icon }} {{ card.guide.label }}
+                    </span>
+
+                </div>
+
+                <div class="guide36-card-body">
+
+                    <h3>
+                        {{ card.guide.short_title }}
+                    </h3>
+
+                    <p>
+                        {{ card.guide.intro }}
+                    </p>
+
+                    <strong>
+                        コースを見る →
+                    </strong>
+
+                    {% if card.hero_credit %}
+                    <small>
+                        Photo: {{ card.hero_credit }} / {{ card.hero_license }}
+                    </small>
+                    {% endif %}
+
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+    AIプラン導線
+    ====================================================== -->
+
+    <section class="guide36-ai-strip">
+
+        <div class="guide36-ai-copy">
+
+            <div class="guide36-ai-icon">
+                🤖
+            </div>
+
+            <div>
+                <p class="v34-eyebrow">
+                    AI AUTO PLAN
+                </p>
+
+                <h2>
+                    迷ったら、おまかせプラン。
+                </h2>
+
+                <p>
+                    旅行日数や好みを選ぶと、候補スポットから旅行プランを自動で作れます。
+                </p>
+            </div>
+
+        </div>
+
+        <a href="{{ url_for('ai_plan') }}" class="v34-button-primary">
+            AIプランを作る
+        </a>
+
+    </section>
+
+
+    <!-- =====================================================
+    エリア導線
+    ====================================================== -->
+
+    <section class="guide36-area-strip">
+
+        <div>
+            <p class="v34-eyebrow">
+                AREA
+            </p>
+
+            <h2>
+                エリアから探したい人はこちら
+            </h2>
+
+            <p>
+                岩屋・北部、東海岸、西海岸、洲本・中部、南あわじから探せます。
+            </p>
+        </div>
+
+        <a href="{{ url_for('home') }}#areas" class="v34-button-secondary">
+            エリアを見る
+        </a>
+
+    </section>
+
+</main>
+
+
+{% include '_footer.html' %}
+
+<script src="{{ url_for('static', filename='app.js', v='37') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<header class="global-header">
+    <div class="global-header-inner">
+
+        <a href="{{ url_for('home') }}" class="global-logo">
+            <span class="global-logo-mark">◒</span>
+            <span>TabiRoute</span>
+        </a>
+
+        <nav class="global-nav" aria-label="メインナビゲーション">
+
+            <a href="{{ url_for('home') }}"
+               class="{% if request.path == '/' %}is-active{% endif %}">
+                ホーム
+            </a>
+
+            <a href="{{ url_for('home') }}#areas"
+               class="{% if request.path.startswith('/area/') %}is-active{% endif %}">
+                エリア
+            </a>
+
+            <a href="{{ url_for('guide_index') }}"
+               class="{% if request.path.startswith('/guide') %}is-active{% endif %}">
+                モデルコース
+            </a>
+
+            <a href="{{ url_for('home') }}#popular"
+               class="{% if request.path.startswith('/spot/') %}is-active{% endif %}">
+                スポット
+            </a>
+
+            <a href="{{ url_for('ai_plan') }}"
+               class="{% if request.path == '/ai-plan' %}is-active{% endif %}">
+                AIプラン
+            </a>
+
+            <a href="{{ url_for('plan') }}"
+               class="global-plan-link {% if request.path == '/plan' or request.path == '/share' %}is-active{% endif %}">
+                旅行プラン
+                <span class="plan-count-badge">0</span>
+            </a>
+
+            <a href="{{ url_for('help_page') }}"
+               class="{% if request.path == '/help' %}is-active{% endif %}">
+                ヘルプ
+            </a>
+
+        </nav>
+
+    </div>
+</header>

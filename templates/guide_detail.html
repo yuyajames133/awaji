@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ seo_title }}</title>
+    <meta name="description" content="{{ seo_description }}">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="TabiRoute">
+    <meta property="og:title" content="{{ seo_title }}">
+    <meta property="og:description" content="{{ seo_description }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+
+    {% if hero_spot and hero_spot.image %}
+    <meta property="og:image" content="{{ hero_spot.image }}">
+    {% endif %}
+
+    <meta name="twitter:card" content="summary_large_image">
+
+    <script type="application/ld+json">{{ {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": guide.title,
+        "description": seo_description,
+        "url": canonical_url,
+        "inLanguage": "ja"
+    } | tojson }}</script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='37') }}">
+</head>
+
+<body class="guide-v36">
+
+{% include '_header.html' %}
+
+
+<!-- =========================================================
+モデルコース詳細 ヒーロー
+========================================================= -->
+
+<section
+    class="guide36-detail-hero"
+    {% if hero_spot and hero_spot.image %}
+    style="
+        background-image:
+            linear-gradient(
+                90deg,
+                rgba(244,249,251,.97) 0%,
+                rgba(244,249,251,.88) 37%,
+                rgba(244,249,251,.24) 67%,
+                rgba(244,249,251,.02) 100%
+            ),
+            url('{{ hero_spot.image }}');
+    "
+    {% endif %}
+>
+
+    <div class="guide36-detail-hero-inner">
+
+        <a href="{{ url_for('guide_index') }}" class="guide36-back-link">
+            ← モデルコース一覧
+        </a>
+
+        <span class="guide36-theme-badge">
+            {{ guide.icon }} {{ guide.label }}
+        </span>
+
+        <h1>
+            {{ guide.title }}
+        </h1>
+
+        <p>
+            {{ guide.intro }}
+        </p>
+
+        <div class="guide36-detail-actions">
+
+            <a href="#guide-spots" class="v34-button-primary">
+                候補スポットを見る
+            </a>
+
+            <a href="{{ url_for('plan') }}" class="v34-button-secondary">
+                旅行プランを作る
+            </a>
+
+        </div>
+
+        {% if hero_spot and hero_spot.image_credit %}
+        <small class="guide36-detail-credit">
+            Photo: {{ hero_spot.image_credit }} / {{ hero_spot.image_license }}
+        </small>
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<main class="guide36-main">
+
+    <!-- =====================================================
+    ポイント＋AIサイドパネル
+    ====================================================== -->
+
+    <section class="guide36-detail-layout">
+
+        <div class="guide36-points-panel">
+
+            <div class="guide36-section-heading">
+                <div>
+                    <p class="v34-eyebrow">
+                        HOW TO PLAN
+                    </p>
+
+                    <h2>
+                        {{ guide.label }}で組むポイント
+                    </h2>
+                </div>
+            </div>
+
+            <div class="guide36-point-grid">
+
+                {% for tip in guide.tips %}
+
+                <div class="guide36-point-card">
+
+                    <span>
+                        {{ loop.index }}
+                    </span>
+
+                    <p>
+                        {{ tip }}
+                    </p>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <aside class="guide36-side-card">
+
+            <div class="guide36-side-icon">
+                ✦
+            </div>
+
+            <p class="v34-eyebrow">
+                QUICK ACTION
+            </p>
+
+            <h3>
+                このテーマで旅を作る
+            </h3>
+
+            <p>
+                気になる場所を選んで、自分用の旅行プランに追加できます。
+            </p>
+
+            <a href="{{ url_for('plan') }}" class="v34-button-primary guide36-side-button">
+                旅行プランを見る
+            </a>
+
+            <a href="{{ url_for('ai_plan') }}" class="v34-button-secondary guide36-side-button">
+                AIで作る
+            </a>
+
+        </aside>
+
+    </section>
+
+
+    <!-- =====================================================
+    候補スポット
+    ====================================================== -->
+
+    <section class="guide36-section" id="guide-spots">
+
+        <div class="guide36-section-heading">
+
+            <div>
+                <p class="v34-eyebrow">
+                    SPOTS
+                </p>
+
+                <h2>
+                    おすすめ候補
+                </h2>
+
+                <p>
+                    全部回る必要はありません。気になる場所だけ選んで追加できます。
+                </p>
+            </div>
+
+            <span class="guide36-count">
+                {{ spots|length }} SPOTS
+            </span>
+
+        </div>
+
+
+        <div class="guide36-spot-grid">
+
+            {% for spot in spots %}
+
+            <article class="guide36-spot-card">
+
+                <a
+                    href="{{ url_for('spot_detail', spot_id=spot.id) }}"
+                    class="guide36-spot-image"
+                >
+
+                    {% if spot.image %}
+                    <img
+                        src="{{ spot.image }}"
+                        alt="{{ spot.name }}"
+                        loading="lazy"
+                    >
+                    {% endif %}
+
+                    <span>
+                        {{ spot.category }}
+                    </span>
+
+                </a>
+
+
+                <div class="guide36-spot-body">
+
+                    <small>
+                        {{ spot.area }}
+                    </small>
+
+                    <h3>
+                        <a href="{{ url_for('spot_detail', spot_id=spot.id) }}">
+                            {{ spot.name }}
+                        </a>
+                    </h3>
+
+                    <p>
+                        {{ spot.description }}
+                    </p>
+
+                    {% if spot.image_credit %}
+                    <em>
+                        Photo: {{ spot.image_credit }} / {{ spot.image_license }}
+                    </em>
+                    {% endif %}
+
+                    <div class="guide36-spot-actions">
+
+                        <a
+                            href="{{ url_for('spot_detail', spot_id=spot.id) }}"
+                            class="guide36-detail-link"
+                        >
+                            詳細を見る
+                        </a>
+
+                        <button
+                            type="button"
+                            class="guide36-add-button"
+                            onclick="addSpotToPlan('{{ spot.id }}')"
+                        >
+                            ＋ プランに追加
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+    最終CTA
+    ====================================================== -->
+
+    <section class="guide36-bottom-strip">
+
+        <div>
+
+            <p class="v34-eyebrow">
+                YOUR TRIP
+            </p>
+
+            <h2>
+                行きたい場所が決まったら、旅を形にする。
+            </h2>
+
+            <p>
+                日程・順番・時間を調整して、自分用の淡路島旅行プランにできます。
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('plan') }}" class="v34-button-primary">
+            旅行プランを作る
+        </a>
+
+    </section>
+
+
+    <section class="guide36-disclaimer">
+
+        <strong>
+            掲載情報について
+        </strong>
+
+        <p>
+            営業時間、料金、交通、予約条件、天候等は変更される場合があります。
+            実際に訪れる前に、各施設・交通事業者の公式情報をご確認ください。
+        </p>
+
+    </section>
+
+</main>
+
+
+{% include '_footer.html' %}
+
+<script src="{{ url_for('static', filename='app.js', v='37') }}"></script>
+
+</body>
+</html>

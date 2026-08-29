@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <!-- =====================================================
+    【目次】
+
+    1. 基本設定
+    2. ヘッダー
+    3. ページタイトル
+    4. 使い方ガイド
+    5. プラン概要
+    6. 日数・並べ替え操作
+    7. API状態
+    8. 旅行プラン一覧
+    9. 空の場合
+    10. 全削除
+    11. JavaScript
+
+    ====================================================== -->
+
+
+    <!-- =====================================================
+    1. 基本設定
+    ====================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>旅行プラン | TabiRoute</title>
+    <meta name="description" content="淡路島旅行の候補を整理して、自分用の旅行プランを作成できます。">
+    <meta name="robots" content="noindex,follow">
+    <link rel="canonical" href="{{ absolute_url('plan') if false else url_for('plan', _external=True) }}">
+
+    <meta
+        name="description"
+        content="淡路島で行きたいスポットを日ごと・時間ごとに整理して旅行プランを作れます。"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        crossorigin=""
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css', v='37') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+    2. ヘッダー
+    ====================================================== -->
+
+    {% include '_header.html' %}
+
+
+    <!-- =====================================================
+    3. ページタイトル
+    ====================================================== -->
+
+    <section class="plan-hero">
+
+        <div class="plan-hero-inner">
+
+            <p class="section-label">
+                MY TRAVEL PLAN
+            </p>
+
+            <h1>
+                旅行プランを作る
+            </h1>
+
+            <p>
+                行きたい場所を追加したら、
+                「何日目に行くか」「何時ごろ行くか」「どの順番で回るか」
+                をここで決めます。
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <main class="plan-page">
+<div class="build-version-badge">v37 ・ PLAN EDITOR</div>
+
+<div id="favorites"></div>
+
+
+
+
+        <!-- =================================================
+        3-A. AIプランとの役割分け
+        ================================================== -->
+
+        <section class="ai-plan-banner plan-role-banner">
+
+            <div>
+                <p class="section-label">
+                    PLAN EDITOR
+                </p>
+
+                <h2>
+                    ここは「作った旅行プランを編集する」ページ
+                </h2>
+
+                <p>
+                    AIに行き先から選んでもらいたい場合はAIプランへ。
+                    このページでは、作成済みプランの日付・時間・順番・地図を調整します。
+                </p>
+            </div>
+
+            <a
+                href="{{ url_for('ai_plan') }}"
+                class="primary-button"
+            >
+                ✨ AIで新しいプランを作る
+            </a>
+
+        </section>
+
+
+        <!-- =================================================
+        4. 使い方ガイド
+        ================================================== -->
+
+        <section class="plan-guide">
+
+            <div class="plan-guide-step">
+
+                <span class="plan-guide-number">
+                    1
+                </span>
+
+                <div>
+
+                    <strong>
+                        行きたい場所を追加
+                    </strong>
+
+                    <p>
+                        エリア・施設ページの「旅行プランに追加」を押す。
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="plan-guide-step">
+
+                <span class="plan-guide-number">
+                    2
+                </span>
+
+                <div>
+
+                    <strong>
+                        日にちと時間を決める
+                    </strong>
+
+                    <p>
+                        1日目・2日目と、予定時刻をスポットごとに設定。
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="plan-guide-step">
+
+                <span class="plan-guide-number">
+                    3
+                </span>
+
+                <div>
+
+                    <strong>
+                        回る順番を整える
+                    </strong>
+
+                    <p>
+                        ↑↓または「エリア順に整理」で並び替える。
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+        5. プラン概要
+        ================================================== -->
+
+        <section
+            id="plan-summary"
+            class="plan-summary"
+        >
+
+            <div class="summary-card">
+
+                <span class="summary-label">
+                    SPOTS
+                </span>
+
+                <strong
+                    id="summary-spot-count"
+                    class="summary-value"
+                >
+                    0
+                </strong>
+
+                <span class="summary-unit">
+                    スポット
+                </span>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <span class="summary-label">
+                    DAYS
+                </span>
+
+                <strong
+                    id="summary-day-count"
+                    class="summary-value"
+                >
+                    1
+                </strong>
+
+                <span class="summary-unit">
+                    日間
+                </span>
+
+            </div>
+
+
+            <div class="summary-card summary-card-wide">
+
+                <span class="summary-label">
+                    NEXT STEP
+                </span>
+
+                <strong
+                    id="summary-next-step"
+                    class="summary-message"
+                >
+                    行きたいスポットを追加しよう
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+        6. 日数・並べ替え操作
+        ================================================== -->
+
+        <section
+            id="plan-tools"
+            class="plan-tools"
+        >
+
+            <div class="plan-tools-left">
+
+                <button
+                    type="button"
+                    class="tool-button"
+                    onclick="addTravelDay()"
+                >
+                    ＋ 1日追加
+                </button>
+
+                <button
+                    type="button"
+                    class="tool-button"
+                    onclick="sortPlanByArea()"
+                >
+                    エリア順に整理
+                </button>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('home') }}#areas"
+                class="tool-link"
+            >
+                ＋ スポットを追加する
+            </a>
+
+        </section>
+
+
+
+        <!-- =================================================
+        6-A. 地図APIでスポット検索
+        ================================================== -->
+
+        <section class="map-search-panel">
+
+            <div class="map-search-copy">
+                <p class="section-label">MAP SEARCH</p>
+                <h2>CSVにない場所も検索</h2>
+                <p>
+                    OpenStreetMapから淡路島周辺の場所を検索できます。
+                    検索ボタンを押した時だけ外部APIへ問い合わせます。
+                </p>
+            </div>
+
+            <form id="osm-search-form" class="map-search-form">
+                <input
+                    id="osm-search-input"
+                    type="search"
+                    placeholder="例：淡路夢舞台 / 神社 / カフェ"
+                    autocomplete="off"
+                >
+
+                <button
+                    type="submit"
+                    class="primary-button search-submit-button"
+                >
+                    地図から検索
+                </button>
+            </form>
+
+            <div id="osm-search-status" class="map-search-status"></div>
+            <div id="osm-search-results" class="map-search-results"></div>
+
+        </section>
+
+
+        <!-- =================================================
+        6-B. 旅行ルート地図
+        ================================================== -->
+
+        <section class="route-map-panel">
+
+            <div class="route-map-header">
+
+                <div>
+                    <p class="section-label">ROUTE MAP</p>
+                    <h2>旅行プランを地図で見る</h2>
+                    <p>
+                        位置情報があるスポットを①②③の順で表示します。
+                        現在の距離は道路距離ではなく直線距離です。
+                    </p>
+                </div>
+
+                <div class="route-action-buttons">
+
+                    <button
+                        id="resolve-map-button"
+                        type="button"
+                        class="tool-button"
+                        onclick="resolveMissingPlanLocations()"
+                    >
+                        位置情報がない場所を検索
+                    </button>
+
+                    <button
+                        id="road-route-button"
+                        type="button"
+                        class="tool-button"
+                        onclick="calculateRoadRoute()"
+                    >
+                        車ルートを計算
+                    </button>
+
+
+                </div>
+
+            </div>
+
+            <div id="travel-map" class="travel-map"></div>
+            <div id="distance-summary" class="distance-summary"></div>
+
+            <div class="planner-note">
+                <strong>地図は旅行プランと連動します</strong>
+                <p>
+                    AIで作成したプランは、この画面を開いた時点で位置情報を自動取得し、
+                    取得できたスポットから順番付きで地図へ反映します。
+                    必要に応じて「車ルートを計算」で道路ルートも確認できます。
+                </p>
+            </div>
+
+        </section>
+
+        <!-- =================================================
+        7. API状態
+        ================================================== -->
+
+        <div
+            id="api-status"
+            class="api-status"
+        >
+            TabiRoute APIを読み込み中...
+        </div>
+
+
+        <!-- =================================================
+        8. 旅行プラン一覧
+        ================================================== -->
+
+        <div
+            id="travel-plan-list"
+            class="travel-plan-days"
+        ></div>
+
+
+        <!-- =================================================
+        9. 空の場合
+        ================================================== -->
+
+        <div
+            id="travel-plan-empty"
+            class="plan-empty"
+        >
+
+            <div class="plan-empty-icon">
+                ＋
+            </div>
+
+            <h2>
+                まず行きたい場所を選ぼう
+            </h2>
+
+            <p>
+                旅行プランはまだ空です。
+                エリアからスポットを探して「旅行プランに追加」を押してください。
+            </p>
+
+            <a
+                href="{{ url_for('home') }}#areas"
+                class="primary-button"
+            >
+                スポットを探す →
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+        10. プランの保存・読み込み・PDF・共有
+        ================================================== -->
+
+        <section class="plan-portability-section">
+
+            <button
+                id="plan-portability-toggle"
+                class="plan-portability-toggle"
+                type="button"
+                onclick="togglePlanPortabilityPanel()"
+                aria-expanded="false"
+                aria-controls="plan-portability-panel"
+            >
+                📦 プランを保存・共有
+            </button>
+
+            <div
+                id="plan-portability-panel"
+                class="plan-portability-panel"
+                hidden
+            >
+
+                <div class="plan-portability-heading">
+                    <div>
+                        <span class="plan-portability-kicker">SAVE / LOAD</span>
+                        <h3>プランを持ち運ぶ</h3>
+                    </div>
+
+                    <p>
+                        JSON・PDFはブラウザ内で処理します。
+                        プランデータをTabiRouteのサーバーへ保存しません。
+                    </p>
+                </div>
+
+                <div class="plan-portability-grid">
+
+                    <button
+                        type="button"
+                        class="plan-portability-card"
+                        onclick="downloadPlanJson()"
+                    >
+                        <span class="plan-portability-icon">💾</span>
+                        <strong>データを保存</strong>
+                        <small>JSONでバックアップ</small>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="plan-portability-card"
+                        onclick="openPlanJsonPicker()"
+                    >
+                        <span class="plan-portability-icon">📂</span>
+                        <strong>データを読み込む</strong>
+                        <small>別端末のJSONを復元</small>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="plan-portability-card"
+                        onclick="printPlanAsPdf()"
+                    >
+                        <span class="plan-portability-icon">📄</span>
+                        <strong>PDFのしおり</strong>
+                        <small>印刷画面からPDF保存</small>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="plan-portability-card"
+                        onclick="shareCurrentPlan()"
+                    >
+                        <span class="plan-portability-icon">🔗</span>
+                        <strong>共有URL</strong>
+                        <small>LINE・別端末へ送る</small>
+                    </button>
+
+                </div>
+
+                <input
+                    id="plan-json-file-input"
+                    type="file"
+                    accept="application/json,.json"
+                    hidden
+                    onchange="importPlanJsonFile(event)"
+                >
+
+                <div class="plan-portability-note">
+                    <strong>JSON</strong> はあとでTabiRouteへ読み込んで編集できます。
+                    <strong>PDF</strong> は旅行当日に見る「旅のしおり」用です。
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+        10. 全削除
+        ================================================== -->
+
+        <div
+            id="travel-plan-actions"
+            class="plan-actions"
+        >
+
+            <button
+                class="danger-button"
+                type="button"
+                onclick="clearTravelPlan()"
+            >
+                旅行プランをすべて削除
+            </button>
+
+        </div>
+
+
+    </main>
+
+
+    <!-- =====================================================
+    11. JavaScript
+    ====================================================== -->
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        crossorigin=""
+    ></script>
+
+    <script
+        src="{{ url_for('static', filename='app.js', v='37') }}"
+    ></script>
+
+
+
+
+<section class="section plan-affiliate-section">
+    <div class="affiliate-card affiliate-card-compact">
+        <div class="affiliate-copy">
+            <span class="affiliate-kicker">HOTEL</span>
+            <h2>宿泊先も決める</h2>
+            <p>作った旅行プランに合わせて、淡路島のホテル・旅館を探せます。</p>
+            <small class="affiliate-disclosure">※アフィリエイト広告を利用しています。</small>
+        </div>
+
+        <a
+            href="https://hb.afl.rakuten.co.jp/hgc/56ebe2a7.cb0f06b3.56ebe2a8.198a353f/?pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Fhyogo%2Fawaji.html%3Futm_source%3Dchatgpt.com&link_type=hybrid_url&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6Imh5YnJpZF91cmwiLCJjb2wiOjF9"
+            target="_blank"
+            rel="sponsored noopener noreferrer"
+            class="affiliate-button"
+        >
+            🏨 楽天トラベルを見る
+        </a>
+    </div>
+</section>
+
+{% include '_footer.html' %}
+
+</body>
+
+</html>

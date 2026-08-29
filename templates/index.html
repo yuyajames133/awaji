@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- =====================================================
+    TabiRoute v34 トップページ
+    ====================================================== -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ seo_title }}</title>
+    <meta name="description" content="{{ seo_description }}">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    <meta name="google-site-verification" content="MBGHuE407dJkff3eecI_BTWtJTdOOvNSzrk1-m7bDEI" />
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TabiRoute">
+    <meta property="og:title" content="{{ seo_title }}">
+    <meta property="og:description" content="{{ seo_description }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+
+    {% if hero_spot and hero_spot.image %}
+    <meta property="og:image" content="{{ hero_spot.image }}">
+    {% endif %}
+
+    <meta name="twitter:card" content="summary_large_image">
+
+    <script type="application/ld+json">{{ {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "TabiRoute",
+        "url": canonical_url,
+        "description": seo_description,
+        "inLanguage": "ja"
+    } | tojson }}</script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='37') }}">
+</head>
+
+<body class="home-v34">
+
+<!-- =========================================================
+ヘッダー
+========================================================= -->
+
+{% include '_header.html' %}
+
+
+<!-- =========================================================
+ヒーロー
+========================================================= -->
+
+<section
+    class="v34-hero"
+    {% if hero_spot and hero_spot.image %}
+    style="
+        background-image:
+            linear-gradient(
+                90deg,
+                rgba(241,248,251,.95) 0%,
+                rgba(241,248,251,.84) 33%,
+                rgba(241,248,251,.18) 62%,
+                rgba(241,248,251,.02) 100%
+            ),
+            url('{{ hero_spot.image }}');
+    "
+    {% endif %}
+>
+    <div class="v34-hero-inner">
+
+        <div class="v34-hero-copy">
+
+            <p class="v34-eyebrow">
+                AWAJI ISLAND TRIP GUIDE
+            </p>
+
+            <h1>
+                淡路島旅行を、<br>
+                もっと探しやすく。
+            </h1>
+
+            <p class="v34-hero-text">
+                モデルコースや人気スポット、AIプランで、<br>
+                あなた向けの淡路島旅行を見つけよう。
+            </p>
+
+            <div class="v34-hero-actions">
+                <a href="{{ url_for('guide_index') }}" class="v34-button-primary">
+                    🗺 モデルコースを見る
+                </a>
+
+                <a href="#areas" class="v34-button-secondary">
+                    ● エリアから探す
+                </a>
+            </div>
+
+            {% if hero_spot and hero_spot.image_credit %}
+            <small class="v34-hero-credit">
+                Photo: {{ hero_spot.image_credit }} / {{ hero_spot.image_license }}
+            </small>
+            {% endif %}
+
+        </div>
+
+    </div>
+</section>
+
+
+<main class="v34-main">
+
+    <!-- =====================================================
+    上段：モデルコース / 人気スポット / AI
+    ====================================================== -->
+
+    <section class="v34-dashboard-grid">
+
+        <!-- 目的別モデルコース -->
+        <div class="v34-panel v34-course-panel">
+
+            <div class="v34-panel-heading">
+                <h2>目的別モデルコース</h2>
+
+                <a href="{{ url_for('guide_index') }}">
+                    すべて見る ›
+                </a>
+            </div>
+
+            <div class="v34-mini-course-grid">
+
+                {% for card in featured_guides %}
+                <a
+                    href="{{ url_for('guide_detail', slug=card.slug) }}"
+                    class="v34-mini-course-card"
+                >
+                    <div class="v34-mini-course-image">
+
+                        {% if card.hero_image %}
+                        <img
+                            src="{{ card.hero_image }}"
+                            alt="{{ card.guide.short_title }}"
+                            loading="lazy"
+                        >
+                        {% endif %}
+
+                        <span class="v34-card-badge">
+                            {{ card.guide.icon }} {{ card.guide.label }}
+                        </span>
+
+                    </div>
+
+                    <div class="v34-mini-course-body">
+                        <h3>{{ card.guide.short_title }}</h3>
+
+                        <p>
+                            {{ card.guide.intro }}
+                        </p>
+
+                        <small>
+                            詳細を見る →
+                        </small>
+                    </div>
+                </a>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- 人気スポット -->
+        <div class="v34-panel v34-popular-panel" id="popular">
+
+            <div class="v34-panel-heading">
+                <h2>人気スポット</h2>
+
+                <a href="#areas">
+                    すべて見る ›
+                </a>
+            </div>
+
+            <div class="v34-popular-grid">
+
+                {% for spot in popular_spots %}
+                <a
+                    href="{{ url_for('spot_detail', spot_id=spot.id) }}"
+                    class="v34-popular-card"
+                >
+
+                    {% if spot.image %}
+                    <img
+                        src="{{ spot.image }}"
+                        alt="{{ spot.name }}"
+                        loading="lazy"
+                    >
+                    {% endif %}
+
+                    <div class="v34-popular-body">
+
+                        <h3>{{ spot.name }}</h3>
+
+                        <span>
+                            {{ spot.category }}
+                        </span>
+
+                        <p>
+                            {{ spot.description }}
+                        </p>
+
+                        {% if spot.address %}
+                        <small>
+                            📍 {{ spot.address }}
+                        </small>
+                        {% endif %}
+
+                    </div>
+
+                </a>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- AIプランナー -->
+        <aside class="v34-panel v34-ai-panel">
+
+            <div class="v34-ai-title">
+                <span class="v34-ai-icon">🤖</span>
+                <h2>AIプランナー</h2>
+            </div>
+
+            <a
+                href="{{ url_for('ai_plan') }}"
+                class="v34-ai-help"
+            >
+                使ってみる ›
+            </a>
+
+            <div class="v34-ai-content">
+
+                <p>
+                    あなたの希望に合わせて、<br>
+                    淡路島の旅行候補を自動で作成します。
+                </p>
+
+                <ul>
+                    <li>✓ 所要時間や目的に合わせて提案</li>
+                    <li>✓ 行きたいスポットを自由に追加</li>
+                    <li>✓ 移動時間も考慮した効率的なプラン</li>
+                </ul>
+
+                <a
+                    href="{{ url_for('ai_plan') }}"
+                    class="v34-ai-button"
+                >
+                    ✦ AIプランを作成する
+                </a>
+
+            </div>
+
+        </aside>
+
+    </section>
+
+
+    <!-- =====================================================
+    エリアから探す
+    ====================================================== -->
+
+    <section class="v34-area-section" id="areas">
+
+        <div class="v34-section-heading">
+            <h2>エリアから探す</h2>
+            <p>
+                淡路島を5つのエリアに分けて、観光スポットを探せます。
+            </p>
+        </div>
+
+        <div class="v34-area-grid">
+
+            {% for area in areas %}
+            <a
+                href="{{ url_for('area', area_name=area) }}"
+                class="v34-area-card"
+            >
+
+                <div class="v34-area-image">
+
+                    {% if area_images[area] %}
+                    <img
+                        src="{{ area_images[area] }}"
+                        alt="{{ area }}"
+                        loading="lazy"
+                    >
+                    {% endif %}
+
+                </div>
+
+                <div class="v34-area-body">
+
+                    <h3>{{ area }}</h3>
+
+                    <p>
+                        {{ area_info[area]["description"] }}
+                    </p>
+
+                    <span>
+                        ● エリアを見る ›
+                    </span>
+
+                </div>
+
+            </a>
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+    旅行プラン導線
+    ====================================================== -->
+
+    <section class="v34-plan-strip">
+
+        <div>
+            <p class="v34-eyebrow">
+                YOUR TRIP
+            </p>
+
+            <h2>
+                気になる場所が見つかったら、旅行プランへ。
+            </h2>
+
+            <p>
+                お気に入りのスポットを追加して、日程・順番を自分用に調整できます。
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('plan') }}"
+            class="v34-button-primary"
+        >
+            旅行プランを作る
+        </a>
+
+    </section>
+
+
+    <!-- =====================================================
+    楽天トラベル
+    ====================================================== -->
+
+    <section class="v34-affiliate-strip">
+
+        <div>
+            <small>PR</small>
+
+            <h2>
+                淡路島の宿泊先を探す
+            </h2>
+
+            <p>
+                旅行プランが決まったら、楽天トラベルでホテル・旅館を探せます。
+            </p>
+
+            <span>
+                ※当サイトはアフィリエイト広告を利用しています。
+            </span>
+        </div>
+
+        <a
+            href="https://hb.afl.rakuten.co.jp/hgc/56ebe2a7.cb0f06b3.56ebe2a8.198a353f/?pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Fhyogo%2Fawaji.html%3Futm_source%3Dchatgpt.com&link_type=hybrid_url&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6Imh5YnJpZF91cmwiLCJjb2wiOjF9"
+            target="_blank"
+            rel="sponsored noopener noreferrer"
+            class="v34-affiliate-button"
+        >
+            楽天トラベルで宿を探す →
+        </a>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+フッター
+========================================================= -->
+
+{% include '_footer.html' %}
+
+<script src="{{ url_for('static', filename='app.js', v='37') }}"></script>
+
+</body>
+</html>

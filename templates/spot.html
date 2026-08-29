@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- =====================================================
+    【目次】
+    1. 基本設定
+    2. ヘッダー
+    3. スポット詳細
+    4. 施設内スポット
+    5. JavaScript
+    ====================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ seo_title }}</title>
+    <meta name="description" content="{{ seo_description }}">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="TabiRoute">
+    <meta property="og:title" content="{{ seo_title }}">
+    <meta property="og:description" content="{{ seo_description }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    {% if spot.image %}
+    <meta property="og:image" content="{{ spot.image }}">
+    {% endif %}
+    <meta name="twitter:card" content="summary_large_image">
+
+    <script type="application/ld+json">{{ {
+        "@context": "https://schema.org",
+        "@type": "Place",
+        "name": spot.name,
+        "description": spot.description,
+        "url": canonical_url,
+        "image": spot.image if spot.image else none,
+        "address": ({
+            "@type": "PostalAddress",
+            "streetAddress": spot.address,
+            "addressRegion": "兵庫県",
+            "addressCountry": "JP"
+        } if spot.address else none)
+    } | tojson }}</script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='37') }}">
+</head>
+<body>
+
+{% include '_header.html' %}
+
+<section class="spot-detail-hero" style="background-image:url('{{ spot.image }}');">
+    <div class="spot-detail-overlay"></div>
+    <div class="spot-detail-inner">
+
+        {% if parent %}
+        <a href="{{ url_for('spot_detail', spot_id=parent.id) }}" class="back-link">
+            ← {{ parent.name }}
+        </a>
+        {% else %}
+        <a href="{{ url_for('area', area_name=spot.area) }}" class="back-link">
+            ← {{ spot.area }}
+        </a>
+        {% endif %}
+
+        {% if parent %}
+        <p class="eyebrow detail-eyebrow">{{ parent.name }}</p>
+        {% else %}
+        <p class="eyebrow detail-eyebrow">{{ spot.area }}</p>
+        {% endif %}
+
+        <h1>{{ spot.name }}</h1>
+
+        <p>{{ spot.description }}</p>
+
+        {% if spot.image_credit %}
+        <p class="photo-credit">
+            写真: <a href="{{ spot.image_source_page }}" target="_blank" rel="noopener noreferrer">{{ spot.image_credit }}</a> /
+            <a href="{{ spot.image_license_url }}" target="_blank" rel="noopener noreferrer">{{ spot.image_license }}</a>
+            (Wikimedia Commons)
+        </p>
+        {% endif %}
+    </div>
+</section>
+
+<main class="section">
+
+    <div class="detail-info-box">
+        <div>
+            <p class="section-label">INFO</p>
+            <h2>{{ spot.name }}</h2>
+
+            {% if spot.address %}
+            <p>📍 {{ spot.address }}</p>
+            {% endif %}
+
+            {% if spot.source_url %}
+            <a href="{{ spot.source_url }}" target="_blank" rel="noopener noreferrer" class="source-link">
+                公式・情報元を見る ↗
+            </a>
+            {% endif %}
+        </div>
+
+        <button
+            class="plan-button detail-plan-button"
+            type="button"
+            data-plan-id="{{ spot.id }}"
+            data-plan-name="{{ spot.name }}"
+            onclick="addToPlan(this)"
+        >
+            旅行プランに追加
+        </button>
+    </div>
+
+    {% if children %}
+    <section class="children-section">
+        <div class="section-heading">
+            <p class="section-label">INSIDE</p>
+            <h2>{{ spot.name }}の中で見る</h2>
+            <p>{{ children|length }}件の施設内スポットがあります。</p>
+        </div>
+
+        <div class="spot-grid">
+            {% for child in children %}
+            <article class="spot-card">
+                <img src="{{ child.image }}" alt="{{ child.name }}" class="spot-image">
+
+                <div class="spot-card-body">
+                    <span class="spot-category">{{ child.category }}</span>
+
+                    <h3>{{ child.name }}</h3>
+
+                    <p class="spot-description">{{ child.description }}</p>
+
+                    <div class="card-actions">
+                        <a href="{{ url_for('spot_detail', spot_id=child.id) }}" class="detail-button">
+                            詳細を見る →
+                        </a>
+
+                        <button
+                            class="plan-button"
+                            type="button"
+                            data-plan-id="{{ child.id }}"
+                            data-plan-name="{{ child.name }}"
+                            onclick="addToPlan(this)"
+                        >
+                            旅行プランに追加
+                        </button>
+
+                        <button
+                            class="favorite-button"
+                            type="button"
+                            data-favorite-id="{{ child.id }}"
+                            data-favorite-name="{{ child.name }}"
+                            onclick="toggleFavorite(this)"
+                        >
+                            ♡ お気に入り
+                        </button>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+</main>
+
+<script src="{{ url_for('static', filename='app.js', v='37') }}"></script>
+
+{% include '_footer.html' %}
+
+</body>
+</html>

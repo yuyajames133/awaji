@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- =====================================================
+    【目次】
+    1. 基本設定
+    2. ヘッダー
+    3. エリア紹介
+    4. 絞り込み
+    5. 親施設・単独スポット一覧
+    6. JavaScript
+    ====================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ seo_title }}</title>
+    <meta name="description" content="{{ seo_description }}">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TabiRoute">
+    <meta property="og:title" content="{{ seo_title }}">
+    <meta property="og:description" content="{{ seo_description }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    {% if hero_image %}
+    <meta property="og:image" content="{{ hero_image }}">
+    {% endif %}
+    <meta name="twitter:card" content="summary_large_image">
+
+    <script type="application/ld+json">{{ {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": seo_title,
+        "url": canonical_url,
+        "description": seo_description,
+        "inLanguage": "ja"
+    } | tojson }}</script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='37') }}">
+</head>
+<body>
+
+{% include '_header.html' %}
+
+<section class="area-hero" style="background-image:url('{{ hero_image }}');">
+    <div class="area-hero-overlay"></div>
+    <div class="area-hero-inner">
+        <a href="{{ url_for('home') }}#areas" class="back-link">← エリア一覧</a>
+        <p class="eyebrow area-eyebrow">AWAJI ISLAND AREA GUIDE</p>
+        <h1>{{ area_name }}</h1>
+        <p>{{ area_info["description"] }}</p>
+    </div>
+</section>
+
+<section class="filter-section">
+    <div class="filter-inner">
+        <button class="filter-button active" onclick="filterSpots('all', this)">すべて</button>
+        {% for category in categories %}
+        <button class="filter-button" onclick="filterSpots('{{ category }}', this)">{{ category }}</button>
+        {% endfor %}
+    </div>
+</section>
+
+<main class="section">
+    <div class="section-heading">
+        <p class="section-label">PLACES</p>
+        <h2>{{ area_name }}の施設・スポット</h2>
+        <p>「施設内を見る」がある場所は、さらに中へ入れます。</p>
+    </div>
+
+    <div class="spot-grid">
+        {% for spot in spots %}
+        <article class="spot-card" data-category="{{ spot.category }}">
+            <div class="spot-image-wrap">
+                <img src="{{ spot.image }}" alt="{{ spot.name }}" class="spot-image">
+                {% if spot.image_credit %}
+                <span class="card-photo-credit">Photo: {{ spot.image_credit }} / {{ spot.image_license }}</span>
+                {% endif %}
+            </div>
+
+            <div class="spot-card-body">
+                <div class="spot-card-top">
+                    <span class="spot-category">{{ spot.category }}</span>
+
+                    {% if child_counts.get(spot.id, 0) %}
+                    <span class="child-count">
+                        施設内 {{ child_counts[spot.id] }}件
+                    </span>
+                    {% endif %}
+                </div>
+
+                <h3>{{ spot.name }}</h3>
+                <p class="spot-description">{{ spot.description }}</p>
+
+                <div class="card-actions">
+                    <a href="{{ url_for('spot_detail', spot_id=spot.id) }}" class="detail-button">
+                        {% if child_counts.get(spot.id, 0) %}
+                            施設内を見る →
+                        {% else %}
+                            詳細を見る →
+                        {% endif %}
+                    </a>
+
+                    <button
+                        class="plan-button"
+                        type="button"
+                        data-plan-id="{{ spot.id }}"
+                        data-plan-name="{{ spot.name }}"
+                        onclick="addToPlan(this)"
+                    >
+                        旅行プランに追加
+                    </button>
+
+                    <button
+                        class="favorite-button"
+                        type="button"
+                        data-favorite-id="{{ spot.id }}"
+                        data-favorite-name="{{ spot.name }}"
+                        onclick="toggleFavorite(this)"
+                    >
+                        ♡ お気に入り
+                    </button>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</main>
+
+<script src="{{ url_for('static', filename='app.js', v='37') }}"></script>
+
+{% include '_footer.html' %}
+
+</body>
+</html>

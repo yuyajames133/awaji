@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>利用規約・免責事項 | TabiRoute</title>
+    <meta name="description" content="TabiRouteの利用規約・免責事項です。">
+    <meta name="robots" content="noindex,follow">
+    <link rel="canonical" href="{{ absolute_url('terms') if false else url_for('terms', _external=True) }}">
+    <meta name="description" content="TabiRouteの利用規約、免責事項、外部サービス・アフィリエイト広告に関する方針です。">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='37') }}">
+</head>
+<body>
+
+{% include '_header.html' %}
+
+<main class="privacy-page">
+
+    <section class="privacy-header">
+        <p class="section-label">TERMS & DISCLAIMER</p>
+        <h1>利用規約・免責事項</h1>
+        <p>
+            TabiRouteは、淡路島旅行の計画を補助する参考情報サービスです。
+            利用にあたっては以下をご確認ください。
+        </p>
+    </section>
+
+    <section class="privacy-section">
+        <h2>1. サービスの位置づけ</h2>
+        <p>
+            TabiRouteは、観光スポットの情報整理、旅行プラン作成、地図表示、
+            経路・所要時間の参考表示等を提供する旅行計画支援サービスです。
+        </p>
+        <p>
+            当サイト自体が宿泊、交通、チケット、体験等の予約契約を受け付けたり、
+            旅行商品を販売・手配したりするものではありません。
+        </p>
+    </section>
+
+    <section class="privacy-section">
+        <h2>2. 掲載情報について</h2>
+        <p>
+            営業時間、料金、休業日、イベント、アクセス、所要時間等は変更される場合があります。
+            利用前に必ず各施設・事業者の公式サイト等で最新情報をご確認ください。
+        </p>
+        <p>
+            TabiRouteは掲載情報の完全性、正確性、最新性、特定目的への適合性を保証するものではありません。
+        </p>
+    </section>
+
+    <section class="privacy-section">
+        <h2>3. ルート・距離・自動プラン</h2>
+        <p>
+            経路、距離、移動時間、自動作成された旅行プランは参考情報です。
+            道路状況、交通規制、天候、混雑、公共交通機関の運行状況等は反映されない場合があります。
+        </p>
+        <p>
+            外部経路サービスが利用できない場合は、直線距離等を用いた概算値を表示する場合があります。
+            概算値は実際の道路距離・所要時間とは異なります。
+        </p>
+    </section>
+
+    <section class="privacy-section">
+        <h2>4. 外部サービス</h2>
+        <p>
+            地図表示、位置検索、道路経路等の一部機能ではOpenStreetMap関連サービスやOSRM等の
+            外部サービスを補助的に利用する場合があります。
+        </p>
+        <p>
+            外部サービスの停止、仕様変更、アクセス制限等により一部機能が利用できない場合があります。
+            TabiRouteは外部サービスの提供・継続を保証しません。
+        </p>
+    </section>
+
+    <section class="privacy-section">
+        <h2>5. アフィリエイト広告</h2>
+        <p>
+            TabiRouteは楽天アフィリエイト等のアフィリエイト広告を利用する場合があります。
+            広告リンクを経由して予約・購入が行われた場合、当サイトが紹介料を受け取ることがあります。
+        </p>
+        <p>
+            実際の予約・購入契約は、利用者とリンク先の事業者との間で成立します。
+            料金、キャンセル、返金、サービス内容等はリンク先事業者の条件をご確認ください。
+        </p>
+    </section>
+
+    <section class="privacy-section">
+        <h2>6. 禁止事項</h2>
+        <p>
+            サービスへの過度な自動アクセス、不正な大量リクエスト、脆弱性を悪用する行為、
+            サービス運営や外部サービスに不当に負荷を与える行為を禁止します。
+        </p>
+    </section>
+
+    <section class="privacy-section">
+        <h2>7. 免責</h2>
+        <p>
+            TabiRouteの利用または利用不能、掲載情報、外部サイト・外部サービスの利用等により生じた損害について、
+            運営者に故意または重大な過失がある場合その他法令上免責が認められない場合を除き、
+            法令上許される範囲で責任を負わないものとします。
+        </p>
+    </section>
+
+    <section class="privacy-section">
+        <h2>8. 内容の変更</h2>
+        <p>
+            法令、外部サービスの利用条件、サービス内容の変更等に応じて、
+            本規約・免責事項を改定する場合があります。
+        </p>
+    </section>
+
+</main>
+
+{% include '_footer.html' %}
+
+</body>
+</html>

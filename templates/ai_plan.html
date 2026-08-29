@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <!-- =====================================================
+    【目次】
+    1. 基本設定
+    2. ヘッダー
+    3. AIプランナー説明
+    4. 条件入力
+    5. 作成中表示
+    6. JavaScript
+    ====================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>おまかせプラン | TabiRoute</title>
+    <meta name="description" content="好みや日数から淡路島の旅行候補を自動で組み立てる機能です。">
+    <meta name="robots" content="noindex,follow">
+    <link rel="canonical" href="{{ absolute_url('ai_plan') if false else url_for('ai_plan', _external=True) }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css', v='37') }}"
+    >
+
+</head>
+
+<body>
+
+
+    <!-- =====================================================
+    2. ヘッダー
+    ====================================================== -->
+
+    {% include '_header.html' %}
+
+
+    <!-- =====================================================
+    3. AIプランナー説明
+    ====================================================== -->
+
+    <section class="ai-planner-hero">
+
+        <div class="ai-planner-hero-inner">
+
+            <p class="section-label">
+                AUTO TRIP PLANNER
+            </p>
+
+            <h1>
+                行き先選びから<br>
+                おまかせ。
+            </h1>
+
+            <p>
+                自分でスポットを追加しなくても、
+                好みと日数を選ぶだけでTabiRouteが淡路島の候補から自動で旅程を作ります。
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <main class="ai-planner-page">
+
+
+        <!-- =================================================
+        4. 条件入力
+        ================================================== -->
+
+        <form
+            id="ai-planner-form"
+            class="ai-planner-form"
+        >
+
+            <section class="ai-form-section">
+
+                <p class="ai-form-step">
+                    STEP 1
+                </p>
+
+                <h2>
+                    何日旅行する？
+                </h2>
+
+                <div class="option-grid option-grid-days">
+
+                    <label class="choice-card">
+
+                        <input
+                            type="radio"
+                            name="days"
+                            value="1"
+                            checked
+                        >
+
+                        <span>
+                            1日
+                        </span>
+
+                    </label>
+
+
+                    <label class="choice-card">
+
+                        <input
+                            type="radio"
+                            name="days"
+                            value="2"
+                        >
+
+                        <span>
+                            1泊2日
+                        </span>
+
+                    </label>
+
+
+                    <label class="choice-card">
+
+                        <input
+                            type="radio"
+                            name="days"
+                            value="3"
+                        >
+
+                        <span>
+                            2泊3日
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+
+            <section class="ai-form-section">
+
+                <p class="ai-form-step">
+                    STEP 2
+                </p>
+
+                <h2>
+                    何が好き？
+                </h2>
+
+                <p class="ai-form-help">
+                    複数選べます。何も選ばなければバランス型で作ります。
+                </p>
+
+
+                <div class="preference-grid">
+
+                    <label class="preference-card">
+
+                        <input
+                            type="checkbox"
+                            name="preferences"
+                            value="anime"
+                        >
+
+                        <span class="preference-icon">
+                            🎮
+                        </span>
+
+                        <strong>
+                            アニメ・テーマパーク
+                        </strong>
+
+                    </label>
+
+
+                    <label class="preference-card">
+
+                        <input
+                            type="checkbox"
+                            name="preferences"
+                            value="scenery"
+                        >
+
+                        <span class="preference-icon">
+                            🌊
+                        </span>
+
+                        <strong>
+                            景色・自然・花
+                        </strong>
+
+                    </label>
+
+
+                    <label class="preference-card">
+
+                        <input
+                            type="checkbox"
+                            name="preferences"
+                            value="onsen"
+                        >
+
+                        <span class="preference-icon">
+                            ♨️
+                        </span>
+
+                        <strong>
+                            温泉
+                        </strong>
+
+                    </label>
+
+
+                    <label class="preference-card">
+
+                        <input
+                            type="checkbox"
+                            name="preferences"
+                            value="history"
+                        >
+
+                        <span class="preference-icon">
+                            🏯
+                        </span>
+
+                        <strong>
+                            歴史・神社・城
+                        </strong>
+
+                    </label>
+
+
+                    <label class="preference-card">
+
+                        <input
+                            type="checkbox"
+                            name="preferences"
+                            value="food"
+                        >
+
+                        <span class="preference-icon">
+                            🍽️
+                        </span>
+
+                        <strong>
+                            グルメ
+                        </strong>
+
+                    </label>
+
+
+                    <label class="preference-card">
+
+                        <input
+                            type="checkbox"
+                            name="preferences"
+                            value="experience"
+                        >
+
+                        <span class="preference-icon">
+                            🐨
+                        </span>
+
+                        <strong>
+                            体験・動物
+                        </strong>
+
+                    </label>
+
+
+                    <label class="preference-card">
+
+                        <input
+                            type="checkbox"
+                            name="preferences"
+                            value="culture"
+                        >
+
+                        <span class="preference-icon">
+                            🏛️
+                        </span>
+
+                        <strong>
+                            建築・文化
+                        </strong>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+
+            <section class="ai-form-section">
+
+                <p class="ai-form-step">
+                    STEP 3
+                </p>
+
+                <h2>
+                    どれくらい詰め込む？
+                </h2>
+
+
+                <div class="option-grid">
+
+                    <label class="choice-card pace-card">
+
+                        <input
+                            type="radio"
+                            name="pace"
+                            value="slow"
+                        >
+
+                        <span>
+                            ゆっくり
+                        </span>
+
+                        <small>
+                            1日 約3スポット
+                        </small>
+
+                    </label>
+
+
+                    <label class="choice-card pace-card">
+
+                        <input
+                            type="radio"
+                            name="pace"
+                            value="normal"
+                            checked
+                        >
+
+                        <span>
+                            標準
+                        </span>
+
+                        <small>
+                            1日 約4スポット
+                        </small>
+
+                    </label>
+
+
+                    <label class="choice-card pace-card">
+
+                        <input
+                            type="radio"
+                            name="pace"
+                            value="full"
+                        >
+
+                        <span>
+                            たっぷり
+                        </span>
+
+                        <small>
+                            1日 約5スポット
+                        </small>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+
+            <div class="ai-create-box">
+
+                <div>
+
+                    <strong>
+                        場所選びはTabiRouteに任せる
+                    </strong>
+
+                    <p>
+                        淡路島の登録スポットから条件に合う場所を自動選択し、
+                        日ごとの旅行プランへ保存します。
+                    </p>
+
+                </div>
+
+
+                <button
+                    id="ai-create-button"
+                    type="submit"
+                    class="ai-create-button"
+                >
+                    ✨ AIに旅行プランを作ってもらう
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+        <!-- =================================================
+        5. 作成中表示
+        ================================================== -->
+
+        <section
+            id="ai-planner-loading"
+            class="ai-planner-loading"
+            hidden
+        >
+
+            <div class="ai-loading-icon">
+                ✨
+            </div>
+
+            <h2>
+                淡路島のスポットを選んでいます...
+            </h2>
+
+            <p>
+                好み・日数・ペースから旅行プランを組み立てています。
+                作成後は旅行プラン画面へ移動し、位置情報を取得して地図にも反映します。
+            </p>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+    6. JavaScript
+    ====================================================== -->
+
+    <script
+        src="{{ url_for('static', filename='app.js', v='37') }}"
+    ></script>
+
+
+{% include '_footer.html' %}
+
+</body>
+
+</html>

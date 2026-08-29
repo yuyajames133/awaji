@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- =====================================================
+    【目次】
+    1. 基本設定
+    2. ヘッダー
+    3. はじめに
+    4. スポットを探す
+    5. AIおまかせプラン
+    6. 旅行プラン編集
+    7. 周辺おすすめ
+    8. お気に入り
+    9. 共有URL
+    10. 別端末への取り込み
+    11. 保存について
+    12. よくある質問
+    13. フッター
+    ====================================================== -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>使い方・ヘルプ | TabiRoute</title>
+    <meta name="description" content="TabiRouteのスポット検索、旅行プラン作成、保存・共有方法を説明します。">
+    <meta name="robots" content="noindex,follow">
+    <link rel="canonical" href="{{ absolute_url('help_page') if false else url_for('help_page', _external=True) }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css', v='37') }}"
+    >
+</head>
+
+<body>
+
+{% include '_header.html' %}
+
+
+<main class="help-page">
+
+    <section class="help-hero">
+
+        <p class="section-label">
+            HELP
+        </p>
+
+        <h1>
+            TabiRouteの使い方
+        </h1>
+
+        <p>
+            スポット探しからAIおまかせプラン、
+            お気に入り、共有URLまで順番に説明します。
+        </p>
+
+    </section>
+
+
+    <section class="help-index">
+
+        <h2>
+            使い方メニュー
+        </h2>
+
+        <div class="help-index-grid">
+            <a href="#search">1. スポットを探す</a>
+            <a href="#ai">2. AIおまかせプラン</a>
+            <a href="#edit">3. 旅行プランを編集</a>
+            <a href="#nearby">4. 周辺おすすめ</a>
+            <a href="#favorite">5. お気に入り</a>
+            <a href="#share">6. 共有URL</a>
+            <a href="#import">7. 別端末へ取り込む</a>
+            <a href="#storage">8. 保存について</a>
+        </div>
+
+    </section>
+
+
+    <section id="search" class="help-section">
+
+        <p class="help-step">
+            STEP 1
+        </p>
+
+        <h2>
+            スポットを探す
+        </h2>
+
+        <p>
+            ホーム画面からエリアを選ぶと、
+            そのエリアの施設・観光スポットを確認できます。
+        </p>
+
+        <div class="help-flow">
+            <span>ホーム</span>
+            <b>→</b>
+            <span>エリア</span>
+            <b>→</b>
+            <span>施設</span>
+            <b>→</b>
+            <span>施設内スポット</span>
+        </div>
+
+        <p>
+            行きたい場所が決まっている場合は、
+            「旅行プランに追加」を押すと自分の旅行プランへ追加できます。
+        </p>
+
+    </section>
+
+
+    <section id="ai" class="help-section">
+
+        <p class="help-step">
+            STEP 2
+        </p>
+
+        <h2>
+            AI・おまかせでプランを作る
+        </h2>
+
+        <p>
+            自分でスポットを1件も選んでいなくても、
+            「おまかせプラン作成」から旅行プランを作れます。
+        </p>
+
+        <div class="help-point">
+            <strong>
+                0件でもOK
+            </strong>
+            <p>
+                TabiRouteが登録スポットから自動で候補を選び、
+                旅行プランへ追加します。
+            </p>
+        </div>
+
+        <p>
+            おまかせプラン画面では、
+            旅行日数・好きなジャンル・旅行ペースを選ぶことで、
+            条件に合わせたプランを作れます。
+        </p>
+
+        <a href="{{ url_for('ai_plan') }}" class="primary-button">
+            おまかせプランを開く
+        </a>
+
+    </section>
+
+
+    <section id="edit" class="help-section">
+
+        <p class="help-step">
+            STEP 3
+        </p>
+
+        <h2>
+            旅行プランを編集する
+        </h2>
+
+        <p>
+            作成された旅行プランは後から自由に変更できます。
+        </p>
+
+        <ul class="help-list">
+            <li>何日目に行くか変更</li>
+            <li>時間を変更</li>
+            <li>不要なスポットを削除</li>
+            <li>スポットを追加</li>
+            <li>車ルート・移動距離を確認</li>
+        </ul>
+
+        <p>
+            AIが作った内容をそのまま使う必要はありません。
+            気に入らない場所は削除して、自分好みに調整できます。
+        </p>
+
+    </section>
+
+
+    <section id="nearby" class="help-section">
+
+        <p class="help-step">
+            STEP 4
+        </p>
+
+        <h2>
+            「この周辺のおすすめ」を使う
+        </h2>
+
+        <p>
+            旅行プラン内の各スポットには、
+            「📍 この周辺のおすすめを見る」があります。
+        </p>
+
+        <p>
+            押すと、同じ施設内・同じエリアなどから
+            周辺のおすすめ候補を表示します。
+        </p>
+
+        <div class="help-flow">
+            <span>プランのスポット</span>
+            <b>→</b>
+            <span>この周辺のおすすめ</span>
+            <b>→</b>
+            <span>気になる場所を追加</span>
+        </div>
+
+        <div class="help-point">
+            <strong>
+                ジャンルと範囲を選んで近くを検索できます
+            </strong>
+
+            <p>
+                「この周辺のおすすめを見る」を押したあと、
+                カフェ・ランチ・観光・温泉・ビーチ・ホテル・コンビニ・スーパーから
+                ジャンルを選びます。
+                検索範囲は500m・1km・3km・5km・10kmから選べます。
+            </p>
+        </div>
+
+    </section>
+
+
+    <section id="favorite" class="help-section">
+
+        <p class="help-step">
+            STEP 5
+        </p>
+
+        <h2>
+            お気に入りを使う
+        </h2>
+
+        <p>
+            気になるスポットは「♡ お気に入り」を押して保存できます。
+        </p>
+
+        <p>
+            お気に入り情報は通常、
+            今使っているスマホ・パソコンのブラウザ内に保存されます。
+        </p>
+
+        <div class="help-point">
+            <strong>
+                共有URLにも含められます
+            </strong>
+            <p>
+                旅行プランを共有すると、
+                お気に入りも一緒に別端末へ引き継げます。
+            </p>
+        </div>
+
+    </section>
+
+
+    <section id="share" class="help-section">
+
+        <p class="help-step">
+            STEP 6
+        </p>
+
+        <h2>
+            共有URLを作る
+        </h2>
+
+        <p>
+            旅行プラン画面の「🔗 このプランを共有」を押します。
+        </p>
+
+        <p>
+            スマホでは共有メニューを開ける場合があり、
+            LINEやメールなどでリンクを送れます。
+            パソコンでは共有URLをコピーできます。
+        </p>
+
+        <div class="help-point">
+            <strong>
+                アカウント登録は不要
+            </strong>
+            <p>
+                名前・メールアドレス・パスワードを登録しなくても使えます。
+            </p>
+        </div>
+
+    </section>
+
+
+    <section id="import" class="help-section">
+
+        <p class="help-step">
+            STEP 7
+        </p>
+
+        <h2>
+            別のスマホ・パソコンへ取り込む
+        </h2>
+
+        <p>
+            共有URLを別端末で開くと、
+            「共有された旅行プラン」画面が表示されます。
+        </p>
+
+        <div class="help-flow">
+            <span>共有URLを開く</span>
+            <b>→</b>
+            <span>内容を確認</span>
+            <b>→</b>
+            <span>この端末に取り込む</span>
+        </div>
+
+        <p>
+            「この端末に取り込む」を押すと、
+            そのスマホ・パソコンのブラウザへ旅行プランとお気に入りを保存します。
+        </p>
+
+        <div class="help-warning">
+            <strong>
+                注意
+            </strong>
+            <p>
+                取り込み先のブラウザにすでに旅行プランがある場合は、
+                共有された旅行プランで置き換わります。
+            </p>
+        </div>
+
+    </section>
+
+
+    <section id="storage" class="help-section">
+
+        <p class="help-step">
+            STEP 8
+        </p>
+
+        <h2>
+            データはどこに保存される？
+        </h2>
+
+        <p>
+            通常の旅行プラン・お気に入りは、
+            利用しているブラウザのlocalStorageに保存されます。
+        </p>
+
+        <div class="help-storage-diagram">
+
+            <div>
+                <strong>自分のiPhone</strong>
+                <span>Safari内に保存</span>
+            </div>
+
+            <div>
+                <strong>自分のPC</strong>
+                <span>Chrome等のブラウザ内に保存</span>
+            </div>
+
+        </div>
+
+        <p>
+            そのため、そのままでは別端末に自動同期されません。
+            別端末へ移したい場合は共有URLを使います。
+        </p>
+
+        <p>
+            現在の共有URL方式では、
+            旅行プラン等の共有データはURLの「#」以降に格納され、
+            TabiRouteのDBへ保存する方式にはしていません。
+        </p>
+
+    </section>
+
+
+    <section class="help-section">
+
+        <p class="help-step">
+            FAQ
+        </p>
+
+        <h2>
+            よくある質問
+        </h2>
+
+        <details class="help-faq">
+            <summary>
+                何もスポットを選ばずに旅行プランを作れる？
+            </summary>
+            <p>
+                作れます。「おまかせプラン作成」またはおまかせプランを使ってください。
+            </p>
+        </details>
+
+        <details class="help-faq">
+            <summary>
+                スマホで作ったプランをPCでも見られる？
+            </summary>
+            <p>
+                共有URLを作ってPCで開き、「この端末に取り込む」を押せば使えます。
+            </p>
+        </details>
+
+        <details class="help-faq">
+            <summary>
+                パスワードは必要？
+            </summary>
+            <p>
+                現在の機能ではアカウント登録やパスワードは必要ありません。
+            </p>
+        </details>
+
+        <details class="help-faq">
+            <summary>
+                URLを共有したら誰でも見られる？
+            </summary>
+            <p>
+                共有URLを知っている人は内容を取り込める可能性があります。
+                必要な相手だけに共有してください。
+            </p>
+        </details>
+
+    </section>
+
+
+        <div class="help-point">
+            <strong>プランはJSONで持ち運べます</strong>
+            <p>旅行プラン画面の「📦 プランを保存・共有」からJSONを保存できます。別のPCやスマホでJSONを読み込むと、日程・時間・お気に入りを復元できます。</p>
+        </div>
+
+        <div class="help-point">
+            <strong>PDFの旅のしおりも作れます</strong>
+            <p>「PDFのしおり」を押すと印刷画面が開きます。そこで「PDFに保存」を選ぶと、旅行当日に見るしおりとして保存できます。JSONやPDFはTabiRouteのサーバーへ保存しません。</p>
+        </div>
+</main>
+
+
+{% include '_footer.html' %}
+
+</body>
+</html>

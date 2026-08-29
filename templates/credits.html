@@ -1,0 +1,12 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>写真クレジット | TabiRoute</title>
+    <meta name="description" content="TabiRouteで使用している写真のクレジットとライセンス情報です。">
+    <meta name="robots" content="noindex,follow">
+    <link rel="canonical" href="{{ absolute_url('credits') if false else url_for('credits', _external=True) }}"><link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='37') }}"></head><body>
+{% include '_header.html' %}
+<main class="credits-page">
+<div class="site-affiliate-notice">
+    写真は各配布元で示されたライセンス条件に基づいて掲載しています。
+    ライセンス情報は各配布元ページでもご確認ください。
+</div>
+<div class="section-heading"><p class="section-label">PHOTO CREDITS</p><h1>写真クレジット</h1><p>使用している再利用可能な写真の作者、ライセンス、出典です。</p></div><div class="credits-grid">{% for spot in photo_spots %}<article class="credit-card"><img src="{{ spot.image }}" alt="{{ spot.name }}"><div class="credit-card-body"><h2>{{ spot.name }}</h2><dl><dt>作者</dt><dd>{{ spot.image_credit }}</dd><dt>ライセンス</dt><dd><a href="{{ spot.image_license_url }}" target="_blank" rel="noopener noreferrer">{{ spot.image_license }}</a></dd><dt>出典</dt><dd><a href="{{ spot.image_source_page }}" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a></dd></dl></div></article>{% endfor %}</div></main>
+{% include '_footer.html' %}</body></html>
